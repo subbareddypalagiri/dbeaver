@@ -11,15 +11,18 @@
             'org.jkiss.dbeaver.xml.editor.color.text=255,255,255'
             'org.jkiss.dbeaver.xml.editor.color.comment=255,0,0'
 
-            'org.jkiss.dbeaver.color.connectionType.qa.background=64,89,66'
-            'org.jkiss.dbeaver.color.connectionType.prod.background=97,61,63'
-
             'org.jkiss.dbeaver.ui.navigator.node.transient.foreground=71,180,65'
             'org.jkiss.dbeaver.ui.navigator.node.new.background=41,66,0'
             'org.jkiss.dbeaver.ui.navigator.node.modified.background=82,52,0'
 
             'org.jkiss.dbeaver.ui.navigator.node.foreground=140,140,140'
             'org.jkiss.dbeaver.ui.navigator.node.statistics.background=105,105,105'
+}
+
+Text.readOnlyConnectionUrl {
+    background-color: '#org-eclipse-ui-workbench-DARK_BACKGROUND';
+    /* Matches Eclipse's dark-theme read-only text color. */
+    color: #bbbbbb;
 }
 
 IEclipsePreferences#org-eclipse-ui-editors:org-eclipse-ui-themes {
@@ -64,6 +67,10 @@ IEclipsePreferences#org-eclipse-ui-editors:org-eclipse-ui-themes {
     background-color: #2F2F2F;
 }
 
+.MPart Table {
+    background-color: #2F2F2F;
+}
+
 .EditorStack, .MPartStack {
     swt-tab-renderer: url('bundleclass://org.jkiss.dbeaver.core/org.jkiss.dbeaver.ui.e4.DBeaverCTabFolderRenderer');
 }
@@ -99,4 +106,10 @@ ExpandableCompositeEx {
     swt-titlebar-color: #cccccc;
 	tb-toggle-hover-color: #F4F7F7;
 	tb-toggle-color: #F4F7F7;
+}
+
+
+ProgressBar {
+    background-color: #3C3F41;
+    color: #2b79d7;
 }

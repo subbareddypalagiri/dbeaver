@@ -63,6 +63,21 @@ public class PostgreRoleManager extends SQLObjectEditor<PostgreRole, PostgreData
     }
 
     @Override
+    public boolean canEditObject(@NotNull PostgreRole object) {
+        return !object.isPublicRole() && super.canEditObject(object);
+    }
+
+    @Override
+    public boolean canDeleteObject(@NotNull PostgreRole object) {
+        return !object.isPublicRole() && super.canDeleteObject(object);
+    }
+
+    @Override
+    public boolean canRenameObject(@NotNull PostgreRole object) {
+        return !object.isPublicRole();
+    }
+
+    @Override
     protected PostgreRole createDatabaseObject(
         @NotNull DBRProgressMonitor monitor,
         @NotNull DBECommandContext context,
@@ -158,6 +173,10 @@ public class PostgreRoleManager extends SQLObjectEditor<PostgreRole, PostgreData
 
         if (role.getValidUntil() != null) {
             options.append(" VALID UNTIL ").append(SQLUtils.quoteString(role, TIMESTAMP_FORMATTER.format(role.getValidUntil())));
+        }
+        
+        if (create || command.hasProperty("connLimit")) { 
+            options.append(" CONNECTION LIMIT ").append(role.getConnLimit()); 
         }
 
         if (options.length() != 0 && extension instanceof PostgreServerCockroachDB) {
