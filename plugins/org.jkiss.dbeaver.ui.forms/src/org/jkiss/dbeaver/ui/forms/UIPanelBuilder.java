@@ -41,7 +41,15 @@ public sealed interface UIPanelBuilder extends UIControlBuilder<UIPanelBuilder> 
     UIPanelBuilder margins(int left, int top, int right, int bottom);
 
     @NotNull
+    UIPanelBuilder spacing(int horizontal, int vertical);
+
+    @NotNull
     UIPanelBuilder row(@NotNull Consumer<? super UIRowBuilder> handler);
+
+    @NotNull
+    default UIPanelBuilder row(@NotNull UIObservable<String> label, @NotNull Consumer<? super UIRowBuilder> handler) {
+        return row(rb -> handler.accept(rb.controlLabel(label)));
+    }
 
     @NotNull
     default UIPanelBuilder row(@NotNull String label, @NotNull Consumer<? super UIRowBuilder> handler) {

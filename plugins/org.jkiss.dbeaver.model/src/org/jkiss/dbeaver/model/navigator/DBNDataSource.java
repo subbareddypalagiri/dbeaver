@@ -21,12 +21,14 @@ import org.jkiss.code.Nullable;
 import org.jkiss.dbeaver.DBException;
 import org.jkiss.dbeaver.model.*;
 import org.jkiss.dbeaver.model.app.DBPProject;
+import org.jkiss.dbeaver.model.connection.DBPDriverWithLazyIcon;
 import org.jkiss.dbeaver.model.navigator.meta.DBXTreeItem;
 import org.jkiss.dbeaver.model.navigator.meta.DBXTreeNode;
 import org.jkiss.dbeaver.model.net.DBWUtils;
 import org.jkiss.dbeaver.model.runtime.DBRProgressListener;
 import org.jkiss.dbeaver.model.runtime.DBRProgressMonitor;
 import org.jkiss.dbeaver.model.struct.DBSObject;
+import org.jkiss.dbeaver.runtime.DBWorkbench;
 import org.jkiss.utils.CommonUtils;
 
 import java.util.Collection;
@@ -40,6 +42,12 @@ public class DBNDataSource extends DBNDatabaseNode implements DBNContainer, DBPA
 
     private final DBPDataSourceContainer dataSource;
     private final DBXTreeNode treeRoot;
+    private final Runnable driverIconUpdateCallback = () -> {
+        DBNModel model = getModel();
+        if (model != null) {
+            model.fireNodeUpdate(this, this, DBNEvent.NodeChange.STRUCT_REFRESH);
+        }
+    };
 
     public DBNDataSource(@NotNull DBNNode parentNode, @NotNull DBPDataSourceContainer dataSource) {
         super(parentNode);
@@ -160,6 +168,9 @@ public class DBNDataSource extends DBNDatabaseNode implements DBNContainer, DBPA
     @Nullable
     @Override
     public DBPImage getNodeIcon() {
+        if (dataSource.getDriver() instanceof DBPDriverWithLazyIcon lazyIcon) {
+            lazyIcon.loadIcon(driverIconUpdateCallback);
+        }
         DBPImage image = super.getNodeIcon();
         if (USE_ICON_DECORATIONS) {
             boolean hasNetworkHandlers = hasNetworkHandlers();
@@ -259,6 +270,9 @@ public class DBNDataSource extends DBNDatabaseNode implements DBNContainer, DBPA
             return false;
         }
         dataSource.setFolder(folder);
+        if (DBWorkbench.isDistributed()) {
+            return dataSource.persistConfiguration(false);
+        }
         return true;
     }
 
